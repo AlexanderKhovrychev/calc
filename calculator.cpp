@@ -51,7 +51,7 @@ std::vector<std::string> Calculator::translateToReversePolish(const std::string 
                     stack.pop();
                 }
                 stack.push(SUB);
-                 lastSymbolAfterOpeningParentheses = false;
+                lastSymbolAfterOpeningParentheses = false;
             }
             break;
         case ADD:
@@ -62,7 +62,7 @@ std::vector<std::string> Calculator::translateToReversePolish(const std::string 
                     stack.pop();
                 }
             stack.push(ADD);
-             lastSymbolAfterOpeningParentheses = false;
+            lastSymbolAfterOpeningParentheses = false;
             break;
 
         case MUL:
@@ -72,7 +72,7 @@ std::vector<std::string> Calculator::translateToReversePolish(const std::string 
                 stack.pop();
             }
             stack.push(MUL);
-             lastSymbolAfterOpeningParentheses = false;
+            lastSymbolAfterOpeningParentheses = false;
             break;
 
         case DIV:
@@ -82,7 +82,7 @@ std::vector<std::string> Calculator::translateToReversePolish(const std::string 
                 stack.pop();
             }
             stack.push(DIV);
-             lastSymbolAfterOpeningParentheses = false;
+            lastSymbolAfterOpeningParentheses = false;
             break;
 
         case '(':
@@ -105,7 +105,10 @@ std::vector<std::string> Calculator::translateToReversePolish(const std::string 
 
 
         default:
-            throw std::string("Unknown symbol");
+            std::string str;
+            strstr.putback(ch);
+            strstr >> str;
+            throw std::string("Unknown symbol: " + str);
         }
     }
     while (!stack.empty())
@@ -123,6 +126,8 @@ double Calculator::calculate(std::string str)
 {
     if (str.empty())
         throw std::string("Error: Empty string");
+    if (!validateParentheses(str))
+        throw std::string("Error: wrong parentheses");
 
     double res = 0;
     std::stack<double> stack;
@@ -177,4 +182,21 @@ double Calculator::calculate(std::string str)
     }
 
     return stack.top();
+}
+
+bool Calculator::validateParentheses(const std::string &str)
+{
+    std::stack<char> st;
+    for (size_t i = 0; i < str.length(); i++)
+    {
+        if (str[i] == '(')
+            st.push('(');
+        if (str[i] == ')')
+            if (st.empty())
+                return false;
+            else
+                st.pop();
+    }
+
+    return st.empty();
 }
