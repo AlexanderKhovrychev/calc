@@ -4,6 +4,8 @@
 int main(int argc, char* argv[])
 {
     std::string expression = "";
+    std::cout.precision(2);
+    std::cout << std::fixed;
 
     std::cout << "Enter expression:" << std::endl;
 
